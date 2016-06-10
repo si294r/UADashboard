@@ -253,9 +253,9 @@
                     {name: 'average_session', type: 'number'},
                     {name: 'average_session_length', type: 'number'},
                     {name: 'average_lifetime', type: 'number'},
-                    {name: 'D1_retention', type: 'number'},
-                    {name: 'D3_retention', type: 'number'},
-                    {name: 'D7_retention', type: 'number'},
+                    {name: 'd1_retention', type: 'number'},
+                    {name: 'd3_retention', type: 'number'},
+                    {name: 'd7_retention', type: 'number'},
                     {name: 'modus_businesstier', type: 'number'},
                     {name: 'median_businesstier', type: 'number'},
                     {name: 'mean_crystaluse', type: 'number'},
@@ -434,13 +434,13 @@
                             xtype: 'templatecolumn',
                             text: 'D1 Retention',
                             width: 80,
-                            dataIndex: 'D1_retention',
+                            dataIndex: 'd1_retention',
                             tpl: Ext.create('Ext.XTemplate', '{[this.formatTemplate(values)]}', {
                                 formatTemplate: function (v) {
-                                    if (v.d1_limit > -1 && v.D1_retention < v.d1_limit) {
-                                        return '<font style="color: red;">' + v.D1_retention + '%</font>';
+                                    if (v.d1_limit > -1 && v.d1_retention < v.d1_limit) {
+                                        return '<font style="color: red;">' + v.d1_retention + '%</font>';
                                     } else {
-                                        return v.D1_retention + '%';
+                                        return v.d1_retention + '%';
                                     }
                                 }
                             }),
@@ -449,13 +449,13 @@
                             xtype: 'templatecolumn',
                             text: 'D3 Retention',
                             width: 80,
-                            dataIndex: 'D3_retention',
+                            dataIndex: 'd3_retention',
                             tpl: Ext.create('Ext.XTemplate', '{[this.formatTemplate(values)]}', {
                                 formatTemplate: function (v) {
-                                    if (v.d3_limit > -1 && v.D3_retention < v.d3_limit) {
-                                        return '<font style="color: red;">' + v.D3_retention + '%</font>';
+                                    if (v.d3_limit > -1 && v.d3_retention < v.d3_limit) {
+                                        return '<font style="color: red;">' + v.d3_retention + '%</font>';
                                     } else {
-                                        return v.D3_retention + '%';
+                                        return v.d3_retention + '%';
                                     }
                                 }
                             }),
@@ -464,13 +464,13 @@
                             xtype: 'templatecolumn',
                             text: 'D7 Retention',
                             width: 80,
-                            dataIndex: 'D7_retention',
+                            dataIndex: 'd7_retention',
                             tpl: Ext.create('Ext.XTemplate', '{[this.formatTemplate(values)]}', {
                                 formatTemplate: function (v) {
-                                    if (v.d7_limit > -1 && v.D7_retention < v.d7_limit) {
-                                        return '<font style="color: red;">' + v.D7_retention + '%</font>';
+                                    if (v.d7_limit > -1 && v.d7_retention < v.d7_limit) {
+                                        return '<font style="color: red;">' + v.d7_retention + '%</font>';
                                     } else {
-                                        return v.D7_retention + '%';
+                                        return v.d7_retention + '%';
                                     }
                                 }
                             }),

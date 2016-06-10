@@ -207,9 +207,9 @@
                     {name: 'average_session', type: 'number'},
                     {name: 'average_session_length', type: 'number'},
                     {name: 'average_lifetime', type: 'number'},
-                    {name: 'D1_retention', type: 'number'},
-                    {name: 'D3_retention', type: 'number'},
-                    {name: 'D7_retention', type: 'number'},
+                    {name: 'd1_retention', type: 'number'},
+                    {name: 'd3_retention', type: 'number'},
+                    {name: 'd7_retention', type: 'number'},
                     {name: 'modus_businesstier', type: 'number'},
                     {name: 'median_businesstier', type: 'number'},
                     {name: 'mean_crystaluse', type: 'number'},
@@ -356,8 +356,8 @@
                             xtype: 'templatecolumn',
                             text: 'D1 Retention',
                             width: 80,
-                            dataIndex: 'D1_retention',
-                            tpl: Ext.create('Ext.XTemplate', '{D1_retention:this.formatTemplate}', {
+                            dataIndex: 'd1_retention',
+                            tpl: Ext.create('Ext.XTemplate', '{d1_retention:this.formatTemplate}', {
                                 formatTemplate: function (v) {
                                     return v + '%';
                                 }
@@ -367,8 +367,8 @@
                             xtype: 'templatecolumn',
                             text: 'D3 Retention',
                             width: 80,
-                            dataIndex: 'D3_retention',
-                            tpl: Ext.create('Ext.XTemplate', '{D3_retention:this.formatTemplate}', {
+                            dataIndex: 'd3_retention',
+                            tpl: Ext.create('Ext.XTemplate', '{d3_retention:this.formatTemplate}', {
                                 formatTemplate: function (v) {
                                     return v + '%';
                                 }
@@ -378,8 +378,8 @@
                             xtype: 'templatecolumn',
                             text: 'D7 Retention',
                             width: 80,
-                            dataIndex: 'D7_retention',
-                            tpl: Ext.create('Ext.XTemplate', '{D7_retention:this.formatTemplate}', {
+                            dataIndex: 'd7_retention',
+                            tpl: Ext.create('Ext.XTemplate', '{d7_retention:this.formatTemplate}', {
                                 formatTemplate: function (v) {
                                     return v + '%';
                                 }
