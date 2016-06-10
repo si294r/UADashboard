@@ -233,6 +233,10 @@
                             reload_by_selected_grid();
                         }
                     },
+                    sorters: [{
+                        property: 'total_revenue',
+                        direction: 'DESC'
+                    }],
                     folderSort: true
                 });
 
