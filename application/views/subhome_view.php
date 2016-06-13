@@ -371,18 +371,18 @@
                             }),
                             sortable: true
                         }, {
-                            text: 'Average Session',
-                            width: 110,
+                            text: 'Average Session (in minutes)',
+                            width: 170,
                             dataIndex: 'average_session',
                             sortable: true
                         }, {
-                            text: 'Average Session Length',
-                            width: 140,
+                            text: 'Average Session Length (in minutes)',
+                            width: 200,
                             dataIndex: 'average_session_length',
                             sortable: true
                         }, {
-                            text: 'Average Lifetime',
-                            width: 110,
+                            text: 'Average Lifetime (in days)',
+                            width: 155,
                             dataIndex: 'average_lifetime',
                             sortable: true
                         }, {
