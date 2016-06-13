@@ -13,20 +13,28 @@
 
         <link href="<?php echo base_url('assets/bootstrap/css/bootstrap.min.css') ?>" rel="stylesheet">
         <link href="<?php echo base_url('assets/navbar.css') ?>" rel="stylesheet">
+        <link href="<?php echo base_url('assets/datepicker/css/datepicker.css') ?>" rel="stylesheet">
 
         <link href="<?php echo base_url('../ext-6.0.1/build/classic/theme-gray/resources/theme-gray-all.css') ?>" rel="stylesheet">
         <link href="<?php echo base_url('../ext-6.0.1/build/examples/classic/restful/restful.css') ?>" rel="stylesheet">
 
+        <!-- Core -->
         <script type="text/javascript" src="<?php echo base_url('assets/jquery/jquery-2.2.2.min.js') ?>"></script>
-        <script type="text/javascript" src="<?php echo base_url('assets/js.cookie.js') ?>"></script>
         <script type="text/javascript" src="<?php echo base_url('../ext-6.0.1/build/ext-all.js') ?>"></script>
-        <!--<script src="<?php echo base_url('../ext-6.0.1/build/classic/theme-gray/theme-gray.js') ?>"></script>-->
+        <!-- Dependency: jquery -->
+        <script type="text/javascript" src="<?php echo base_url('assets/bootstrap/js/bootstrap.min.js') ?>"></script>
+        <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
+        <!-- Dependency: jquery, bootstrap -->
+        <script type="text/javascript" src="<?php echo base_url('assets/datepicker/js/bootstrap-datepicker.js') ?>"></script>
+        <script type="text/javascript" src="<?php echo base_url('assets/js.cookie.js') ?>"></script>
+        
         <script type="text/javascript">
             document.app_url = '<?php echo base_url() ?>';
             Ext.onReady(function () {
                 Ext.getBody().removeCls('x-body'); // stop extjs from overriding bootstrap css - 2016-06-03
             });
         </script>
+        
         <script type="text/javascript" src="<?php echo base_url('assets/manage_note.js') ?>"></script>
         <script type="text/javascript">
 
@@ -545,12 +553,18 @@
                     <form class="form-inline">
                         <div class="form-group">
                             <label for="start_date">From</label>
-                            <input type="date" class="form-control" format="yyyy-mm-dd" id="start_date">
+                            <input type="text" class="form-control" id="start_date">
                         </div>
                         <div class="form-group">
                             <label for="end_date">To</label> 
-                            <input type="date" class="form-control" id="end_date">
+                            <input type="text" class="form-control" id="end_date">
                         </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#start_date').datepicker({ format: 'yyyy-mm-dd' });
+                                $('#end_date').datepicker({ format: 'yyyy-mm-dd' });
+                            });
+                        </script>                        
                         <button type="button" class="btn" id="btn_search">Search</button>                        
                     </form>
                 </div>
@@ -610,9 +624,6 @@
                 <div class="col-md-12" id="grid_container"></div>
             </div>
         </div>
-
-        <script src="<?php echo base_url('assets/bootstrap/js/bootstrap.min.js') ?>"></script>
-        <script src="https://code.highcharts.com/highcharts.js"></script>
-
+        
     </body>
 </html>
