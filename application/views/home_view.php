@@ -17,6 +17,12 @@
 
         <link href="<?php echo base_url('../ext-6.0.1/build/classic/theme-gray/resources/theme-gray-all.css') ?>" rel="stylesheet">
         <link href="<?php echo base_url('../ext-6.0.1/build/examples/classic/restful/restful.css') ?>" rel="stylesheet">
+        
+        <style>
+            .grid-row-green {
+                background-color: #99e699;
+            }
+        </style>
 
         <!-- Core -->
         <script type="text/javascript" src="<?php echo base_url('assets/jquery/jquery-2.2.2.min.js') ?>"></script>
@@ -27,14 +33,14 @@
         <!-- Dependency: jquery, bootstrap -->
         <script type="text/javascript" src="<?php echo base_url('assets/datepicker/js/bootstrap-datepicker.js') ?>"></script>
         <script type="text/javascript" src="<?php echo base_url('assets/js.cookie.js') ?>"></script>
-        
+
         <script type="text/javascript">
             document.app_url = '<?php echo base_url() ?>';
             Ext.onReady(function () {
                 Ext.getBody().removeCls('x-body'); // stop extjs from overriding bootstrap css - 2016-06-03
             });
         </script>
-        
+
         <script type="text/javascript" src="<?php echo base_url('assets/manage_note.js') ?>"></script>
         <script type="text/javascript">
 
@@ -114,6 +120,9 @@
                     }
 
                     Ext.get('chart_container').unmask();
+
+                    $('#start_date').val(data.start_date);
+                    $('#end_date').val(data.end_date);
 
                     $('#chart_container').highcharts({
                         chart: {
@@ -288,9 +297,9 @@
                         }
                     },
                     sorters: [{
-                        property: 'total_revenue',
-                        direction: 'DESC'
-                    }],
+                            property: 'total_revenue',
+                            direction: 'DESC'
+                        }],
                     folderSort: true
                 });
 
@@ -320,6 +329,11 @@
                                             + encodeURIComponent(record.data.campaign_name)
                                 }
                             }
+                        }
+                    },
+                    viewConfig: {
+                        getRowClass: function (record, rowIndex, rowParams, store) {
+                            return record.get("total_revenue") > record.get("spend") ? "grid-row-green" : "";
                         }
                     },
                     columns: [{
@@ -561,8 +575,8 @@
                         </div>
                         <script type="text/javascript">
                             $(function () {
-                                $('#start_date').datepicker({ format: 'yyyy-mm-dd' });
-                                $('#end_date').datepicker({ format: 'yyyy-mm-dd' });
+                                $('#start_date').datepicker({format: 'yyyy-mm-dd'});
+                                $('#end_date').datepicker({format: 'yyyy-mm-dd'});
                             });
                         </script>                        
                         <button type="button" class="btn" id="btn_search">Search</button>                        
@@ -624,6 +638,6 @@
                 <div class="col-md-12" id="grid_container"></div>
             </div>
         </div>
-        
+
     </body>
 </html>

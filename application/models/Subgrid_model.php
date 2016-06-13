@@ -98,15 +98,15 @@ where rank_count=1
 )
 
 select sub_campaign as AFSiteID
-,sum(revenue) as total_revenue
--- ,sum(cost) as spend
+,round(sum(revenue),2) as total_revenue
+ ,round(sum(cost),2) as spend
  ,round(sum(cost)/count(1),2) as cpi
 ,count(1) as install
  ,round(sum(revenue)/count(1),2) as arpu
  ,round(sum(revenue)/nullif(sum(spending_user),0),2) as arppu
 ,100*sum(spending_user)/count(1) as ppu
 --,100*(sum(revenue)-sum(cost))/nullif(sum(cost),0) as roi
-,(sum(revenue)-sum(cost)) as roi
+,round((sum(revenue)-sum(cost)),2) as roi
 ,sum(session)/count(1) as average_session
 ,sum(session_length)/count(1) as average_session_length
 ,sum(lifetime)/count(1) as average_lifetime

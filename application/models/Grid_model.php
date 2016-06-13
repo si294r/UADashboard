@@ -100,15 +100,15 @@ where rank_count=1
 )
 
 select referrer_name,referrer_name as campaign_name, 0 as node
-,sum(revenue) as total_revenue
- ,sum(cost) as spend
+,round(sum(revenue),2) as total_revenue
+ ,round(sum(cost),2) as spend
  ,round(sum(cost)/count(1),2) as cpi
 ,count(1) as install
  ,round(sum(revenue)/count(1),2) as arpu
  ,round(sum(revenue)/nullif(sum(spending_user),0),2) as arppu
 ,100*sum(spending_user)/count(1) as ppu
 --,100*(sum(revenue)-sum(cost))/nullif(sum(cost),0) as roi
-,(sum(revenue)-sum(cost)) as roi
+,round((sum(revenue)-sum(cost)),2) as roi
 ,sum(session)/count(1) as average_session
 ,sum(session_length)/count(1) as average_session_length
 ,sum(lifetime)/count(1) as average_lifetime
@@ -134,15 +134,15 @@ group by referrer_name
 UNION ALL
 
 select referrer_name,campaign_name, 1 as node
-,sum(revenue) as total_revenue
- ,sum(cost) as spend
+,round(sum(revenue),2) as total_revenue
+ ,round(sum(cost),2) as spend
  ,round(sum(cost)/count(1),2) as cpi
 ,count(1) as install
  ,round(sum(revenue)/count(1),2) as arpu
  ,round(sum(revenue)/nullif(sum(spending_user),0),2) as arppu
 ,100*sum(spending_user)/count(1) as ppu
 --,100*(sum(revenue)-sum(cost))/nullif(sum(cost),0) as roi
-,(sum(revenue)-sum(cost)) as roi
+,round(sum(revenue)-sum(cost),2) as roi
 ,sum(session)/count(1) as average_session
 ,sum(session_length)/count(1) as average_session_length
 ,sum(lifetime)/count(1) as average_lifetime
@@ -150,9 +150,9 @@ select referrer_name,campaign_name, 1 as node
 ,100*sum(retention_D3)/count(1) as D3_retention
 ,100*sum(retention_D7)/count(1) as D7_retention
 ,min(mod_tier) as modus_businesstier
-,min(med_businesstier) as median_businesstier
-,sum(crystaluse)/count(1) as mean_crystaluse
-,min(med_crystaluse) as median_crystaluse
+,round(min(med_businesstier),0) as median_businesstier
+,round(sum(crystaluse)/count(1),0) as mean_crystaluse
+,round(min(med_crystaluse),0) as median_crystaluse
 ,-1 as arpu_limit
 ,-1 as cpi_limit
 ,-1 as ppu_limit

@@ -18,6 +18,12 @@
         <link href="<?php echo base_url('../ext-6.0.1/build/classic/theme-gray/resources/theme-gray-all.css') ?>" rel="stylesheet">
         <link href="<?php echo base_url('../ext-6.0.1/build/examples/classic/restful/restful.css') ?>" rel="stylesheet">
 
+        <style>
+            .grid-row-green {
+                background-color: #99e699;
+            }
+        </style>
+        
         <!-- Core -->
         <script type="text/javascript" src="<?php echo base_url('assets/jquery/jquery-2.2.2.min.js') ?>"></script>
         <script type="text/javascript" src="<?php echo base_url('../ext-6.0.1/build/ext-all.js') ?>"></script>
@@ -73,6 +79,9 @@
 
                     Ext.get('chart_container').unmask();
 
+                    $('#start_date').val(data.start_date);
+                    $('#end_date').val(data.end_date);
+                    
                     $('#chart_container').highcharts({
                         chart: {
                             type: 'spline'
@@ -205,6 +214,7 @@
                 fields: [
                     {name: 'afsiteid', type: 'string'},
                     {name: 'total_revenue', type: 'number'},
+                    {name: 'spend', type: 'number'},
                     {name: 'cpi', type: 'number'},
                     {name: 'install', type: 'number'},
                     {name: 'arpu', type: 'number'},
@@ -266,6 +276,11 @@
                             }
                         }
                     },
+                    viewConfig: {
+                        getRowClass: function (record, rowIndex, rowParams, store) {
+                            return record.get("total_revenue") > record.get("spend") ? "grid-row-green" : "";
+                        }
+                    },
                     columns: [{
                             //xtype: 'treecolumn',
                             text: 'AF-SiteID',
@@ -279,6 +294,17 @@
                             width: 80,
                             dataIndex: 'total_revenue',
                             tpl: Ext.create('Ext.XTemplate', '{total_revenue:this.formatTemplate}', {
+                                formatTemplate: function (v) {
+                                    return '$' + v;
+                                }
+                            }),
+                            sortable: true
+                        }, {
+                            xtype: 'templatecolumn',
+                            text: 'Spend',
+                            width: 80,
+                            dataIndex: 'spend',
+                            tpl: Ext.create('Ext.XTemplate', '{spend:this.formatTemplate}', {
                                 formatTemplate: function (v) {
                                     return '$' + v;
                                 }
