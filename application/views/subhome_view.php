@@ -371,7 +371,7 @@
                             }),
                             sortable: true
                         }, {
-                            text: 'Average Session (in minutes)',
+                            text: 'Average Number of Session',
                             width: 170,
                             dataIndex: 'average_session',
                             sortable: true
