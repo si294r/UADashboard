@@ -75,7 +75,8 @@ class Subhome extends CI_Controller {
                         $xAxis[] = $v['dates'];
                         $note[] = $v['event_note'];
                     }
-                    $yAxis[$v['series']][] = (int) $v['install'];
+//                    $yAxis[$v['series']][] = (int) $v['install'];
+                    $yAxis[$v['afsiteid']][] = (int) $v['install'];
                 }
                 echo json_encode(
                         array('data' => $data,

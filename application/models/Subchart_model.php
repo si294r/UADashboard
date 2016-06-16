@@ -51,9 +51,21 @@ class Subchart_model extends CI_Model {
         }
         
         $sql_sub_where = implode("','", $arr_filter);
-        $subquery_tanggal = implode(" union \r\n", $arr_tanggal);
-        $subquery_AFSiteID = implode(" union \r\n", $arr_AFSiteID);
+//        $subquery_tanggal = implode(" union \r\n", $arr_tanggal);
+//        $subquery_AFSiteID = implode(" union \r\n", $arr_AFSiteID);
         
+        $sql = "
+select dcf.* 
+  ,COALESCE((select event_note from tbl_ua_manage_note where tanggal = dcf.dates limit 1), '') event_note
+from data_chart_AFSiteID dcf
+where dates>= '".$this->get_start_date()."' -- Tanggal Start
+and dates<='".$this->get_end_date()."' -- Tanggal end
+and refferer_name='".$this->get_referrer_name()."' -- Filter refferer name 
+and campaign_name='".$this->get_campaign_name()."' -- Filter campaign name
+and AFSiteID IN ('$sql_sub_where')  -- Selected AFSiteID
+order by dates, AFSiteID";
+        
+/*
        $sql = "
 with 
 data_ua as
@@ -94,8 +106,12 @@ left join data_chart_final dcf
 order by dta.dates, dta.series
 
 ";
+ * 
+ */
+        
 //echo $sql;
 //die;
+        
         $query = $this->db->query($sql);
         return $query->result_array();
     }

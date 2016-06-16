@@ -41,9 +41,21 @@ class Chart_model extends CI_Model {
         }
         
         $sql_where = implode("','", $arr_filter);
-        $subquery_tanggal = implode(" union \r\n", $arr_tanggal);
-        $subquery_series = implode(" union \r\n", $arr_series);
-        
+//        $subquery_tanggal = implode(" union \r\n", $arr_tanggal);
+//        $subquery_series = implode(" union \r\n", $arr_series);
+
+        $sql = "
+select dcf.* 
+  ,COALESCE((select event_note from tbl_ua_manage_note where tanggal = dcf.dates limit 1), '') event_note
+from data_chart_series dcf
+where dates>= '".$this->get_start_date()."' -- Tanggal Start
+and dates<='".$this->get_end_date()."' -- Tanggal end
+and series IN ('$sql_where')
+order by dates, series
+;
+";
+
+/*        
         $sql = "with 
 data_ua as
 (select af_siteid,media_source,campaign,date_joined::date as dates,
@@ -118,6 +130,9 @@ left join data_all_install dai
 order by dts.dates, dts.series
 
 ";
+ * 
+ */
+        
 //echo $sql;
 //die;
 
