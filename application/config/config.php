@@ -24,7 +24,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? "https" : "http";
+if (isset($_SERVER["HTTP_X_FORWARDED_PROTO"]) && $_SERVER["HTTP_X_FORWARDED_PROTO"] == 'https') {
+    $protocol = "https";
+} else if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+    $protocol = "https";
+} else {
+    $protocol = "http";
+}
 
 $config['base_url'] = $protocol . "://{$_SERVER['HTTP_HOST']}/UADashboard";
 
