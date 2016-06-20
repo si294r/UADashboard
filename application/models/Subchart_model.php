@@ -60,7 +60,7 @@ select dcf.*
 from data_chart_AFSiteID dcf
 where dates>= '".$this->get_start_date()."' -- Tanggal Start
 and dates<='".$this->get_end_date()."' -- Tanggal end
-and refferer_name='".$this->get_referrer_name()."' -- Filter refferer name 
+and referrer_name='".$this->get_referrer_name()."' -- Filter referrer name 
 and campaign_name='".$this->get_campaign_name()."' -- Filter campaign name
 and AFSiteID IN ('$sql_sub_where')  -- Selected AFSiteID
 order by dates, AFSiteID";
