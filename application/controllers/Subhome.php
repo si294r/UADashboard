@@ -14,7 +14,7 @@ class Subhome extends CI_Controller {
     public function index($referrer_name, $campaign_name) {
         $_SESSION['referrer_name'] = $referrer_name;
         $_SESSION['campaign_name'] = $campaign_name;
-        $this->load->view('subhome_view', array('referrer_name'=>$referrer_name, 'campaign_name'=>$campaign_name));
+        $this->load->view('subhome_view', array('referrer_name' => $referrer_name, 'campaign_name' => $campaign_name));
     }
 
     public function grid($tipe = "", $start_date = "", $end_date = "") {
@@ -66,10 +66,10 @@ class Subhome extends CI_Controller {
                 if ($data_AFSiteID != "") {
                     $this->chart->set_data_AFSiteID(json_decode(urldecode($data_AFSiteID)));
                 }
-                $data = $this->chart->get();                
+                $data = $this->chart->get();
                 $xAxis = array();
                 $note = array();
-                $yAxis = array(); 
+                $yAxis = array();
                 foreach ($data as $k => $v) {
                     if (!in_array($v['dates'], $xAxis)) {
                         $xAxis[] = $v['dates'];
@@ -95,6 +95,34 @@ class Subhome extends CI_Controller {
                         array('data' => null, 'text' => 'Unsupported Request Method', 'success' => FALSE)
                 );
         }
+    }
+
+    public function export_csv() {
+        $this->load->model('subgrid_model', 'grid');
+        $data = $this->grid->get();
+
+        $csv = session_id() . '.csv';
+        $fp = fopen($csv, 'w');
+
+        $header = array_keys($data[0]);
+        fputcsv($fp, $header);
+        
+        foreach ($data as $fields) {
+            fputcsv($fp, $fields);
+        }
+
+        fclose($fp);
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="export.csv"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($csv));
+        readfile($csv);
+
+        unlink($csv);
     }
 
 }

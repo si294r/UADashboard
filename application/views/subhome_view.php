@@ -197,6 +197,10 @@
                 $('#btnBackToMain').click(function () {
                     location.href = document.app_url + 'home';
                 });
+                
+                $('#btnExportCSV').click(function () {
+                    location.href = document.app_url + 'subhome/export_csv';
+                });
 
             });
         </script>        
@@ -221,7 +225,7 @@
                     {name: 'arppu', type: 'number'},
                     {name: 'ppu', type: 'number'},
                     {name: 'roi', type: 'number'},
-                    {name: 'roi2', type: 'number'},
+                    {name: 'roi_percent', type: 'number'},
                     {name: 'average_session', type: 'number'},
                     {name: 'average_session_length', type: 'number'},
                     {name: 'average_lifetime', type: 'number'},
@@ -375,14 +379,10 @@
                             xtype: 'templatecolumn',
                             text: 'ROI%',
                             width: 80,
-                            dataIndex: 'roi_persen',
-                            tpl: Ext.create('Ext.XTemplate', '{[this.formatTemplate(values)]}', {
+                            dataIndex: 'roi_percent',
+                            tpl: Ext.create('Ext.XTemplate', '{roi_percent:this.formatTemplate}', {
                                 formatTemplate: function (v) {
-                                    if (v.spend <= 0) {
-                                        return '0%';
-                                    } else {
-                                       return +((v.total_revenue/v.spend)*100).toFixed(2) + '%';
-                                    }
+                                    return v + '%';
                                 }
                             }),
                             sortable: true
@@ -553,6 +553,9 @@
                             <label>AF-SiteID</label>
                         </div>
                     </form>
+                </div>
+                <div class="col-md-4" style="text-align: center;">
+                    <button type="button" class="btn btn-default" id="btnExportCSV">Export CSV</button>
                 </div>
             </div>
 

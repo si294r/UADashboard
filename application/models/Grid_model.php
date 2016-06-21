@@ -79,8 +79,8 @@ select referrer_name,referrer_name as campaign_name, 0 as node
  ,round(sum(revenue)/count(1),2) as arpu
  ,round(sum(revenue)/nullif(sum(spending_user),0),2) as arppu
 ,100*sum(spending_user)/count(1) as ppu
---,100*(sum(revenue)-sum(costs))/nullif(sum(costs),0) as roi
 ,round((sum(revenue)-sum(costs)),2) as roi
+,nvl(100*round((sum(revenue)-sum(costs))/nullif(sum(costs),0),2),0) as roi_percent
 ,sum(session)/count(1) as average_session
 ,sum(session_length)/count(1) as average_session_length
 ,sum(lifetime)/count(1) as average_lifetime
@@ -113,8 +113,8 @@ select referrer_name,campaign_name, 1 as node
  ,round(sum(revenue)/count(1),2) as arpu
  ,round(sum(revenue)/nullif(sum(spending_user),0),2) as arppu
 ,100*sum(spending_user)/count(1) as ppu
---,100*(sum(revenue)-sum(costs))/nullif(sum(costs),0) as roi
 ,round(sum(revenue)-sum(costs),2) as roi
+,nvl(100*round((sum(revenue)-sum(costs))/nullif(sum(costs),0),2),0) as roi_percent
 ,sum(session)/count(1) as average_session
 ,sum(session_length)/count(1) as average_session_length
 ,sum(lifetime)/count(1) as average_lifetime
