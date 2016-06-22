@@ -226,6 +226,7 @@
                     {name: 'ppu', type: 'number'},
                     {name: 'roi', type: 'number'},
                     {name: 'roi_percent', type: 'number'},
+                    {name: 'roas_percent', type: 'number'},
                     {name: 'average_session', type: 'number'},
                     {name: 'average_session_length', type: 'number'},
                     {name: 'average_lifetime', type: 'number'},
@@ -381,6 +382,17 @@
                             width: 80,
                             dataIndex: 'roi_percent',
                             tpl: Ext.create('Ext.XTemplate', '{roi_percent:this.formatTemplate}', {
+                                formatTemplate: function (v) {
+                                    return v + '%';
+                                }
+                            }),
+                            sortable: true
+                        }, {
+                            xtype: 'templatecolumn',
+                            text: 'ROAS%',
+                            width: 80,
+                            dataIndex: 'roas_percent',
+                            tpl: Ext.create('Ext.XTemplate', '{roas_percent:this.formatTemplate}', {
                                 formatTemplate: function (v) {
                                     return v + '%';
                                 }
