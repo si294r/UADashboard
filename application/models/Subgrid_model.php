@@ -79,6 +79,7 @@ select AFSiteID
 ,100*sum(spending_user)/count(1) as ppu
 ,round((sum(revenue)-sum(costs)),2) as roi
 ,nvl(100*round((sum(revenue)-sum(costs))/nullif(sum(costs),0),2),0) as roi_percent
+,nvl(100*round(sum(revenue)/nullif(sum(costs),0),2),0) as roas_percent
 ,sum(session)/count(1) as average_session
 ,sum(session_length)/count(1) as average_session_length
 ,sum(lifetime)/count(1) as average_lifetime
