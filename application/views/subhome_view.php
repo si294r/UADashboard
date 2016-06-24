@@ -15,8 +15,8 @@
         <link href="<?php echo base_url('assets/navbar.css') ?>" rel="stylesheet">
         <link href="<?php echo base_url('assets/datepicker/css/datepicker.css') ?>" rel="stylesheet">
 
-        <link href="<?php echo base_url('../ext-6.0.1/build/classic/theme-gray/resources/theme-gray-all.css') ?>" rel="stylesheet">
-        <link href="<?php echo base_url('../ext-6.0.1/build/examples/classic/restful/restful.css') ?>" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/extjs/6.0.1/classic/theme-gray/resources/theme-gray-all.css" rel="stylesheet">
+        <link href="<?php echo base_url('assets/restful.css') ?>" rel="stylesheet">
 
         <style>
             .grid-row-green {
@@ -26,7 +26,7 @@
         
         <!-- Core -->
         <script type="text/javascript" src="<?php echo base_url('assets/jquery/jquery-2.2.2.min.js') ?>"></script>
-        <script type="text/javascript" src="<?php echo base_url('../ext-6.0.1/build/ext-all.js') ?>"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/extjs/6.0.1/ext-all.js"></script>
         <!-- Dependency: jquery -->
         <script type="text/javascript" src="<?php echo base_url('assets/bootstrap/js/bootstrap.min.js') ?>"></script>
         <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
