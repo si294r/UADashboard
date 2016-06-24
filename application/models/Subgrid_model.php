@@ -94,6 +94,7 @@ select AFSiteID
 from data_ua_date 
 left join data_modus using (AFSiteID)
 group by AFSiteID
+order by total_revenue desc
 ;
 ";
 //        echo $sql;
