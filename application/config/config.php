@@ -32,7 +32,12 @@ if (isset($_SERVER["HTTP_X_FORWARDED_PROTO"]) && $_SERVER["HTTP_X_FORWARDED_PROT
     $protocol = "http";
 }
 
-$config['base_url'] = $protocol . "://{$_SERVER['HTTP_HOST']}/UADashboard";
+if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+    $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
+} else {
+    $host = $_SERVER['HTTP_HOST'];
+}
+$config['base_url'] = $protocol . "://{$host}/Billionaire";
 
 /*
 |--------------------------------------------------------------------------
