@@ -36,6 +36,7 @@
 
         <script type="text/javascript">
             document.app_url = '<?php echo base_url() ?>';
+            document.app_class = '<?php echo strtolower($this->router->fetch_class()); ?>';
             Ext.onReady(function () {
                 Ext.getBody().removeCls('x-body'); // stop extjs from overriding bootstrap css - 2016-06-03
             });
@@ -139,10 +140,10 @@
                     var start_date = $('#start_date').val();
                     var end_date = $('#end_date').val();
                     Ext.get('chart_container').mask('loading');
-                    reload_grid(document.app_url + 'subhome/grid/' + val + '/' + start_date + '/' + end_date);
+                    reload_grid(document.app_url + document.app_class + '/grid/' + val + '/' + start_date + '/' + end_date);
                 } else {
                     Ext.get('chart_container').mask('loading');
-                    reload_grid(document.app_url + 'subhome/grid/' + val);
+                    reload_grid(document.app_url + document.app_class + '/grid/' + val);
                 }
             }
 
@@ -157,7 +158,7 @@
                     for (var i = 0; i < obj.length; i++) {
                         param.push(obj[i].data.afsiteid);
                     }
-                    reload_chart(document.app_url + 'subhome/chart/' + encodeURIComponent(JSON.stringify(param)));
+                    reload_chart(document.app_url + document.app_class + '/chart/' + encodeURIComponent(JSON.stringify(param)));
                 }
             }
 
@@ -195,11 +196,11 @@
                 }
 
                 $('#btnBackToMain').click(function () {
-                    location.href = document.app_url + 'home';
+                    location.href = document.app_url + document.app_class.replace('sub','');
                 });
                 
                 $('#btnExportCSV').click(function () {
-                    location.href = document.app_url + 'subhome/export_csv';
+                    location.href = document.app_url + document.app_class + '/export_csv';
                 });
 
             });
@@ -249,11 +250,15 @@
                     autoLoad: false,
                     proxy: {
                         type: 'ajax',
-                        url: document.app_url + 'subhome/grid'
+                        url: document.app_url + document.app_class + '/grid'
                     },
                     listeners: {
                         load: function () {
-                            reload_by_selected_grid();
+                            if (records.length > 0) {
+                                reload_by_selected_grid();
+                            } else {
+                                Ext.get('chart_container').unmask();
+                            }
                         }
                     },
                     sorters: [{
@@ -473,7 +478,7 @@
 
             Ext.onReady(function () {
                 Ext.get('chart_container').mask('loading');
-                reload_grid(document.app_url + 'subhome/grid');
+                reload_grid(document.app_url + document.app_class + '/grid');
             });
         </script>        
     </head>
@@ -482,30 +487,10 @@
         <div class="container">
 
             <!-- Static navbar -->
-            <nav class="navbar navbar-default" style="margin-bottom: 10px;">
-                <div class="container-fluid">
-                    <div class="navbar-header">                        
-                        <a class="navbar-brand" href="#">UA</a>
-                    </div>
-                    <div id="navbar" class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav">
-                            <?php $class = strtolower($this->router->fetch_class()); ?>
-                            <li class="<?php echo $class == 'home' ? 'active' : '' ?>">
-                                <a href="<?php echo base_url('home') ?>">Dashboard</a>
-                            </li>
-                            <li class="<?php echo $class == 'setting' ? 'active' : '' ?>">
-                                <a href="<?php echo base_url('setting') ?>">Setting</a>
-                            </li>
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><a href="<?php echo base_url('signin/out') ?>">Signout</a></li>
-                        </ul>                        
-                    </div><!--/.nav-collapse -->
-                </div><!--/.container-fluid -->
-            </nav>
+            <?php $this->load->view ('navbar'); ?>
 
             <div class="row" style="margin-top: 0px;">
-                <div class="col-md-8"><h3><?php echo $referrer_name . " - " . $campaign_name; ?></h3></div>
+                <div class="col-md-8"><h3>Billionaire - <?php echo $referrer_name . " - " . $campaign_name; ?></h3></div>
             </div>
 
             <div class="row" style="margin-top: 10px;">

@@ -19,7 +19,7 @@ Ext.onReady(function () {
         model: 'Notes',
         proxy: {
             type: 'rest',
-            url: document.app_url + 'home/manage_notes',
+            url: document.app_url + document.app_class + '/manage_notes',
                     reader: {
                         type: 'json',
                         rootProperty: 'data'

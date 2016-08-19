@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Setting extends CI_Controller {
+class Setting2 extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -13,14 +13,14 @@ class Setting extends CI_Controller {
 
     public function index($channel = "") {
         $this->load->model('setting_model', 'setting');
-        $this->setting->set_project('billionaire');
+        $this->setting->set_project('jellypop');
         if (isset($_POST['channel'])) {
             $this->setting->save();
         }
         $data['arr_channel'] = $this->setting->list_channel();
         $data['row_setting'] = $this->setting->get($channel);
         $data['selected_channel'] = $channel;
-        $this->load->view('setting_view', $data);
+        $this->load->view('setting2_view', $data);
     }
 
 }

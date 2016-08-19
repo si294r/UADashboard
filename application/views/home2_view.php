@@ -526,26 +526,26 @@
                                 }
                             }),
                             sortable: true
-                        }, {
-                            text: 'Modus BTier',
-                            width: 80,
-                            dataIndex: 'modus_businesstier',
-                            sortable: true
-                        }, {
-                            text: 'Median BTier',
-                            width: 80,
-                            dataIndex: 'median_businesstier',
-                            sortable: true
-                        }, {
-                            text: 'Mean Crystal Usage',
-                            width: 130,
-                            dataIndex: 'mean_crystaluse',
-                            sortable: true
-                        }, {
-                            text: 'Median Crystal Usage',
-                            width: 140,
-                            dataIndex: 'median_crystaluse',
-                            sortable: true
+//                        }, {
+//                            text: 'Modus BTier',
+//                            width: 80,
+//                            dataIndex: 'modus_businesstier',
+//                            sortable: true
+//                        }, {
+//                            text: 'Median BTier',
+//                            width: 80,
+//                            dataIndex: 'median_businesstier',
+//                            sortable: true
+//                        }, {
+//                            text: 'Mean Crystal Usage',
+//                            width: 130,
+//                            dataIndex: 'mean_crystaluse',
+//                            sortable: true
+//                        }, {
+//                            text: 'Median Crystal Usage',
+//                            width: 140,
+//                            dataIndex: 'median_crystaluse',
+//                            sortable: true
                         }]
                 });
 
@@ -565,7 +565,7 @@
             <?php $this->load->view ('navbar'); ?>
 
             <div class="row" style="margin-top: 0px;">
-                <div class="col-md-8"><h3>Billionaire - Main Dashboard</h3></div>
+                <div class="col-md-8"><h3>Jelly Pop - Main Dashboard</h3></div>
                 <div class="col-md-4" style="text-align: right; padding-top: 20px;">
                     <button type="button" class="btn btn-default" id="btnManageNote">Manage Note</button>
                 </div>

@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends CI_Controller {
+class Subhome2 extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -11,51 +11,14 @@ class Home extends CI_Controller {
         }
     }
 
-    public function index() {
-        $this->load->view('home_view');
-    }
-
-    public function manage_notes($id = "") {
-        $this->load->model('manage_note_model', 'manage_note');
-        $this->manage_note->set_project('billionaire');
-
-        switch ($_SERVER['REQUEST_METHOD']) {
-            case 'GET':
-                $this->load->database();
-                $data = $this->manage_note->get();
-                echo json_encode(
-                        array('data' => $data, 'message' => 'Data Loaded', 'success' => true, 'method' => 'GET')
-                );
-                break;
-            case 'POST':
-                $data = $this->manage_note->post();
-                echo json_encode(
-                        array('data' => $data, 'message' => 'Data Created', 'success' => true, 'method' => 'POST')
-                );
-                break;
-            case 'PUT':
-                $this->load->database();
-                $data = $this->manage_note->put($id);
-                echo json_encode(
-                        array('data' => $data, 'message' => 'Data Updated', 'success' => true, 'method' => 'PUT')
-                );
-                break;
-            case 'DELETE':
-                $this->load->database();
-                $data = $this->manage_note->delete($id);
-                echo json_encode(
-                        array('data' => $data, 'message' => 'Data Deleted', 'success' => true, 'method' => 'DELETE')
-                );
-                break;
-            default :
-                echo json_encode(
-                        array('data' => null, 'message' => 'Unsupported Request Method', 'success' => FALSE)
-                );
-        }
+    public function index($referrer_name, $campaign_name) {
+        $_SESSION['referrer_name2'] = $referrer_name;
+        $_SESSION['campaign_name2'] = $campaign_name;
+        $this->load->view('subhome2_view', array('referrer_name' => $referrer_name, 'campaign_name' => $campaign_name));
     }
 
     public function grid($tipe = "", $start_date = "", $end_date = "") {
-        $this->load->model('grid_model', 'grid');
+        $this->load->model('subgrid2_model', 'grid');
 
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'GET':
@@ -84,19 +47,8 @@ class Home extends CI_Controller {
                     }
                 }
                 $data = $this->grid->get();
-                $index = -1;
-                $tree = array();
-                foreach ($data as $k => $v) {
-                    if ($v['node'] == 0) {
-                        $index++;
-                        $tree[$index] = $v;
-                    } elseif ($v['node'] == 1) {
-                        $v['leaf'] = true;
-                        $tree[$index]['children'][] = $v;
-                    }
-                }
                 echo json_encode(
-                        array('children' => $tree, 'text' => '.', 'success' => true, 'method' => 'GET')
+                        array('children' => $data, 'text' => '.', 'success' => true, 'method' => 'GET')
                 );
                 break;
             default :
@@ -106,15 +58,15 @@ class Home extends CI_Controller {
         }
     }
 
-    public function chart($data_referrer = "") {
-        $this->load->model('chart_model', 'chart');
+    public function chart($data_AFSiteID = "") {
+        $this->load->model('subchart2_model', 'chart');
 
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'GET':
-                if ($data_referrer != "") {
-                    $this->chart->set_data_referrer(json_decode(urldecode($data_referrer)));
+                if ($data_AFSiteID != "") {
+                    $this->chart->set_data_AFSiteID(json_decode(urldecode($data_AFSiteID)));
                 }
-                $data = $this->chart->get();                
+                $data = $this->chart->get();
                 $xAxis = array();
                 $note = array();
                 $yAxis = array();
@@ -122,9 +74,9 @@ class Home extends CI_Controller {
                     if (!in_array($v['dates'], $xAxis)) {
                         $xAxis[] = $v['dates'];
                         $note[] = $v['event_note'];
-                        $yAxis['Non_Organic_Install'][] = (int) $v['non_organic_install'];
                     }
-                    $yAxis[$v['series']][] = (int) $v['install'];
+//                    $yAxis[$v['series']][] = (int) $v['install'];
+                    $yAxis[$v['afsiteid']][] = (int) $v['install'];
                 }
                 echo json_encode(
                         array('data' => $data,
@@ -143,6 +95,34 @@ class Home extends CI_Controller {
                         array('data' => null, 'text' => 'Unsupported Request Method', 'success' => FALSE)
                 );
         }
+    }
+
+    public function export_csv() {
+        $this->load->model('subgrid2_model', 'grid');
+        $data = $this->grid->get();
+
+        $csv = session_id() . '.csv';
+        $fp = fopen($csv, 'w');
+
+        $header = array_keys($data[0]);
+        fputcsv($fp, $header);
+        
+        foreach ($data as $fields) {
+            fputcsv($fp, $fields);
+        }
+
+        fclose($fp);
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="export.csv"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($csv));
+        readfile($csv);
+
+        unlink($csv);
     }
 
 }

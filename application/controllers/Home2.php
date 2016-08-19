@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends CI_Controller {
+class Home2 extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -12,12 +12,12 @@ class Home extends CI_Controller {
     }
 
     public function index() {
-        $this->load->view('home_view');
+        $this->load->view('home2_view');
     }
 
     public function manage_notes($id = "") {
         $this->load->model('manage_note_model', 'manage_note');
-        $this->manage_note->set_project('billionaire');
+        $this->manage_note->set_project('jellypop');
 
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'GET':
@@ -55,7 +55,7 @@ class Home extends CI_Controller {
     }
 
     public function grid($tipe = "", $start_date = "", $end_date = "") {
-        $this->load->model('grid_model', 'grid');
+        $this->load->model('grid2_model', 'grid');
 
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'GET':
@@ -107,7 +107,7 @@ class Home extends CI_Controller {
     }
 
     public function chart($data_referrer = "") {
-        $this->load->model('chart_model', 'chart');
+        $this->load->model('chart2_model', 'chart');
 
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'GET':

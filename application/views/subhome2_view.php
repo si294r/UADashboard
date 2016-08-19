@@ -23,7 +23,7 @@
                 background-color: #99e699;
             }
         </style>
-
+        
         <!-- Core -->
         <script type="text/javascript" src="<?php echo base_url('assets/jquery/jquery-2.2.2.min.js') ?>"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/extjs/6.0.1/ext-all.js"></script>
@@ -41,49 +41,7 @@
                 Ext.getBody().removeCls('x-body'); // stop extjs from overriding bootstrap css - 2016-06-03
             });
         </script>
-
-        <script type="text/javascript" src="<?php echo base_url('assets/manage_note.js') ?>"></script>
         <script type="text/javascript">
-
-            function get_yaxis_opposite(value) {
-                if (value == 'Non_Organic_Install') {
-                    if ($('#graphic1').val() == 'Non Organic') {
-                        return false;
-                    } else if ($('#graphic2').val() == 'Non Organic') {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
-                    if ($('#graphic1').val() == 'Install') {
-                        return false;
-                    } else if ($('#graphic2').val() == 'Install') {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            }
-
-            function get_yaxis_series(value) {
-                if (value == 'Non_Organic_Install') {
-                    if ($('#graphic1').val() == 'Non Organic') {
-                        return 1;
-                    } else if ($('#graphic2').val() == 'Non Organic') {
-                        return 0;
-                    } else {
-                        return 1;
-                    }
-                } else {
-                    if ($('#graphic1').val() == 'Install') {
-                        return 1;
-                    } else if ($('#graphic2').val() == 'Install') {
-                        return 0;
-                    } else {
-                        return 1;
-                    }
-                }
-            }
 
             function reload_chart(url) {
                 Ext.get('chart_container').mask('loading');
@@ -108,13 +66,13 @@
                                 }
                             },
 //                            opposite: series == 'Non_Organic_Install' ? true : false
-                            opposite: get_yaxis_opposite(series)
+//                            opposite: false
                         });
                         arr_series.push({
                             name: series_name,
 //                            type: 'spline',
 //                            yAxis: series == 'Non_Organic_Install' ? 0 : 1,
-                            yAxis: get_yaxis_series(series),
+//                            yAxis: 1,
                             data: data.yAxis[series]
                         });
                         i++;
@@ -124,7 +82,7 @@
 
                     $('#start_date').val(data.start_date);
                     $('#end_date').val(data.end_date);
-
+                    
                     $('#chart_container').highcharts({
                         chart: {
                             type: 'spline'
@@ -198,7 +156,7 @@
                 if (obj.length > 0) {
                     var param = [];
                     for (var i = 0; i < obj.length; i++) {
-                        param.push(obj[i].data.referrer_name + ',' + obj[i].data.campaign_name);
+                        param.push(obj[i].data.afsiteid);
                     }
                     reload_chart(document.app_url + document.app_class + '/chart/' + encodeURIComponent(JSON.stringify(param)));
                 }
@@ -222,27 +180,28 @@
                     reload_by_date(4);
                 });
                 $('#graphic1').change(function () {
-                    Cookies.set('main_graphic1', $('#graphic1').val());
-                    reload_chart_by_selection();
-                });
-                $('#graphic2').change(function () {
-                    Cookies.set('main_graphic2', $('#graphic2').val());
+                    Cookies.set('submain_graphic1', $('#graphic1').val());
                     reload_chart_by_selection();
                 });
                 $('#show_top').change(function () {
-                    Cookies.set('main_show_top', $('#show_top').val());
+                    Cookies.set('submain_show_top', $('#show_top').val());
                     reload_by_selected_grid();
                 });
 
-                if (typeof (Cookies.get('main_graphic1')) !== 'undefined') {
-                    $('#graphic1').val(Cookies.get('main_graphic1'));
+                if (typeof (Cookies.get('submain_graphic1')) !== 'undefined') {
+                    $('#graphic1').val(Cookies.get('submain_graphic1'));
                 }
-                if (typeof (Cookies.get('main_graphic2')) !== 'undefined') {
-                    $('#graphic2').val(Cookies.get('main_graphic2'));
+                if (typeof (Cookies.get('submain_show_top')) !== 'undefined') {
+                    $('#show_top').val(Cookies.get('submain_show_top'));
                 }
-                if (typeof (Cookies.get('main_show_top')) !== 'undefined') {
-                    $('#show_top').val(Cookies.get('main_show_top'));
-                }
+
+                $('#btnBackToMain').click(function () {
+                    location.href = document.app_url + document.app_class.replace('sub','');
+                });
+                
+                $('#btnExportCSV').click(function () {
+                    location.href = document.app_url + document.app_class + '/export_csv';
+                });
 
             });
         </script>        
@@ -258,8 +217,7 @@
             Ext.define('Task', {
                 extend: 'Ext.data.TreeModel',
                 fields: [
-                    {name: 'referrer_name', type: 'string'},
-                    {name: 'campaign_name', type: 'string'},
+                    {name: 'afsiteid', type: 'string'},
                     {name: 'total_revenue', type: 'number'},
                     {name: 'spend', type: 'number'},
                     {name: 'cpi', type: 'number'},
@@ -295,7 +253,7 @@
                         url: document.app_url + document.app_class + '/grid'
                     },
                     listeners: {
-                        load: function (obj, records, successful, operation, node, eOpts) {
+                        load: function () {
                             if (records.length > 0) {
                                 reload_by_selected_grid();
                             } else {
@@ -327,15 +285,6 @@
                             fn: function () {
                                 reload_chart_by_selection();
                             }
-                        },
-                        itemdblclick: {
-                            fn: function (obj, record, item, index, e, eOpts) {
-                                if (record.data.leaf) {
-                                    location.href = document.app_url + 'sub' + document.app_class + '/index/'
-                                            + encodeURIComponent(record.data.referrer_name) + '/'
-                                            + encodeURIComponent(record.data.campaign_name)
-                                }
-                            }
                         }
                     },
                     viewConfig: {
@@ -344,11 +293,11 @@
                         }
                     },
                     columns: [{
-                            xtype: 'treecolumn',
-                            text: 'Referrer Name',
+                            //xtype: 'treecolumn',
+                            text: 'AF-SiteID',
                             width: 200,
                             sortable: true,
-                            dataIndex: 'campaign_name',
+                            dataIndex: 'afsiteid',
                             locked: true
                         }, {
                             xtype: 'templatecolumn',
@@ -377,13 +326,9 @@
                             text: 'CPI',
                             width: 80,
                             dataIndex: 'cpi',
-                            tpl: Ext.create('Ext.XTemplate', '{[this.formatTemplate(values)]}', {
+                            tpl: Ext.create('Ext.XTemplate', '{cpi:this.formatTemplate}', {
                                 formatTemplate: function (v) {
-                                    if (v.cpi_limit > -1 && v.cpi > v.cpi_limit) {
-                                        return '<font style="color: red;">$' + v.cpi + '</font>';
-                                    } else {
-                                        return '$' + v.cpi;
-                                    }
+                                    return '$' + v;
                                 }
                             }),
                             sortable: true
@@ -397,13 +342,9 @@
                             text: 'ARPU',
                             width: 80,
                             dataIndex: 'arpu',
-                            tpl: Ext.create('Ext.XTemplate', '{[this.formatTemplate(values)]}', {
+                            tpl: Ext.create('Ext.XTemplate', '{arpu:this.formatTemplate}', {
                                 formatTemplate: function (v) {
-                                    if (v.arpu_limit > -1 && v.arpu < v.arpu_limit) {
-                                        return '<font style="color: red;">$' + v.arpu + '</font>';
-                                    } else {
-                                        return '$' + v.arpu;
-                                    }
+                                    return '$' + v;
                                 }
                             }),
                             sortable: true
@@ -423,13 +364,9 @@
                             text: 'PPU',
                             width: 80,
                             dataIndex: 'ppu',
-                            tpl: Ext.create('Ext.XTemplate', '{[this.formatTemplate(values)]}', {
+                            tpl: Ext.create('Ext.XTemplate', '{ppu:this.formatTemplate}', {
                                 formatTemplate: function (v) {
-                                    if (v.ppu_limit > -1 && v.ppu < v.ppu_limit) {
-                                        return '<font style="color: red;">' + v.ppu + '%</font>';
-                                    } else {
-                                        return v.ppu + '%';
-                                    }
+                                    return v + '%';
                                 }
                             }),
                             sortable: true
@@ -486,13 +423,9 @@
                             text: 'D1 Retention',
                             width: 80,
                             dataIndex: 'd1_retention',
-                            tpl: Ext.create('Ext.XTemplate', '{[this.formatTemplate(values)]}', {
+                            tpl: Ext.create('Ext.XTemplate', '{d1_retention:this.formatTemplate}', {
                                 formatTemplate: function (v) {
-                                    if (v.d1_limit > -1 && v.d1_retention < v.d1_limit) {
-                                        return '<font style="color: red;">' + v.d1_retention + '%</font>';
-                                    } else {
-                                        return v.d1_retention + '%';
-                                    }
+                                    return v + '%';
                                 }
                             }),
                             sortable: true
@@ -501,13 +434,9 @@
                             text: 'D3 Retention',
                             width: 80,
                             dataIndex: 'd3_retention',
-                            tpl: Ext.create('Ext.XTemplate', '{[this.formatTemplate(values)]}', {
+                            tpl: Ext.create('Ext.XTemplate', '{d3_retention:this.formatTemplate}', {
                                 formatTemplate: function (v) {
-                                    if (v.d3_limit > -1 && v.d3_retention < v.d3_limit) {
-                                        return '<font style="color: red;">' + v.d3_retention + '%</font>';
-                                    } else {
-                                        return v.d3_retention + '%';
-                                    }
+                                    return v + '%';
                                 }
                             }),
                             sortable: true
@@ -516,36 +445,32 @@
                             text: 'D7 Retention',
                             width: 80,
                             dataIndex: 'd7_retention',
-                            tpl: Ext.create('Ext.XTemplate', '{[this.formatTemplate(values)]}', {
+                            tpl: Ext.create('Ext.XTemplate', '{d7_retention:this.formatTemplate}', {
                                 formatTemplate: function (v) {
-                                    if (v.d7_limit > -1 && v.d7_retention < v.d7_limit) {
-                                        return '<font style="color: red;">' + v.d7_retention + '%</font>';
-                                    } else {
-                                        return v.d7_retention + '%';
-                                    }
+                                    return v + '%';
                                 }
                             }),
                             sortable: true
-                        }, {
-                            text: 'Modus BTier',
-                            width: 80,
-                            dataIndex: 'modus_businesstier',
-                            sortable: true
-                        }, {
-                            text: 'Median BTier',
-                            width: 80,
-                            dataIndex: 'median_businesstier',
-                            sortable: true
-                        }, {
-                            text: 'Mean Crystal Usage',
-                            width: 130,
-                            dataIndex: 'mean_crystaluse',
-                            sortable: true
-                        }, {
-                            text: 'Median Crystal Usage',
-                            width: 140,
-                            dataIndex: 'median_crystaluse',
-                            sortable: true
+//                        }, {
+//                            text: 'Modus BTier',
+//                            width: 80,
+//                            dataIndex: 'modus_businesstier',
+//                            sortable: true
+//                        }, {
+//                            text: 'Median BTier',
+//                            width: 80,
+//                            dataIndex: 'median_businesstier',
+//                            sortable: true
+//                        }, {
+//                            text: 'Mean Crystal Usage',
+//                            width: 130,
+//                            dataIndex: 'mean_crystaluse',
+//                            sortable: true
+//                        }, {
+//                            text: 'Median Crystal Usage',
+//                            width: 140,
+//                            dataIndex: 'median_crystaluse',
+//                            sortable: true
                         }]
                 });
 
@@ -565,10 +490,7 @@
             <?php $this->load->view ('navbar'); ?>
 
             <div class="row" style="margin-top: 0px;">
-                <div class="col-md-8"><h3>Billionaire - Main Dashboard</h3></div>
-                <div class="col-md-4" style="text-align: right; padding-top: 20px;">
-                    <button type="button" class="btn btn-default" id="btnManageNote">Manage Note</button>
-                </div>
+                <div class="col-md-8"><h3>Jelly Pop - <?php echo $referrer_name . " - " . $campaign_name; ?></h3></div>
             </div>
 
             <div class="row" style="margin-top: 10px;">
@@ -584,8 +506,8 @@
                         </div>
                         <script type="text/javascript">
                             $(function () {
-                                $('#start_date').datepicker({format: 'yyyy-mm-dd'});
-                                $('#end_date').datepicker({format: 'yyyy-mm-dd'});
+                                $('#start_date').datepicker({ format: 'yyyy-mm-dd' });
+                                $('#end_date').datepicker({ format: 'yyyy-mm-dd' });
                             });
                         </script>                        
                         <button type="button" class="btn" id="btn_search">Search</button>                        
@@ -609,19 +531,7 @@
                         <div class="form-group">
                             <label for="graphic1">Graphic 1</label>
                             <select class="form-control" id="graphic1" style="width: 150px">
-                                <option value="Non Organic">Non Organic</option>
                                 <option value="Install" selected>Install</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-md-4" style="text-align: center;">
-                    <form class="form-inline">
-                        <div class="form-group">
-                            <label for="graphic2">Graphic 2</label>
-                            <select class="form-control" id="graphic2" style="width: 150px">
-                                <option value="Non Organic" selected>Non Organic</option>
-                                <option value="Install">Install</option>
                             </select>
                         </div>
                     </form>
@@ -637,14 +547,23 @@
                                 <option value="10">10</option>
                                 <option value="20">20</option>
                             </select>
-                            <label>Channel</label>
+                            <label>AF-SiteID</label>
                         </div>
                     </form>
+                </div>
+                <div class="col-md-4" style="text-align: center;">
+                    <button type="button" class="btn btn-default" id="btnExportCSV">Export CSV</button>
                 </div>
             </div>
 
             <div class="row" style="margin-top: 20px;">
                 <div class="col-md-12" id="grid_container"></div>
+            </div>
+
+            <div class="row" style="margin-top: 20px;">
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-default" id="btnBackToMain">Back To Main</button>
+                </div>
             </div>
         </div>
 

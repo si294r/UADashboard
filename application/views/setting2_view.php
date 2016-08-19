@@ -30,7 +30,7 @@
             <!-- Static navbar -->
             <?php $this->load->view ('navbar'); ?>
 
-            <h3>Billionaire - Setting Page</h3>
+            <h3>Jelly Pop - Setting Page</h3>
 
             <br/>
             <form class="form-horizontal" method="POST">
