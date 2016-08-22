@@ -253,7 +253,7 @@
                         url: document.app_url + document.app_class + '/grid'
                     },
                     listeners: {
-                        load: function () {
+                        load: function (obj, records, successful, operation, node, eOpts) {
                             if (records.length > 0) {
                                 reload_by_selected_grid();
                             } else {
