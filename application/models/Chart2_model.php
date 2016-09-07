@@ -46,7 +46,7 @@ class Chart2_model extends CI_Model {
 
         $sql = "
 select dcf.* 
-  ,COALESCE((select event_note from tbl_ua_manage_note where tanggal = dcf.dates limit 1), '') event_note
+  ,COALESCE((select event_note from tbl_ua_manage_note where tanggal = dcf.dates and project = 'jellypop' limit 1), '') event_note
 from data_chart_series_jellypop dcf
 where dates>= '".$this->get_start_date()."' -- Tanggal Start
 and dates<='".$this->get_end_date()."' -- Tanggal end
