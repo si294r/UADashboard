@@ -37,7 +37,7 @@ if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
 } else {
     $host = $_SERVER['HTTP_HOST'];
 }
-$config['base_url'] = $protocol . "://{$host}/v1/UADashboard_dev";
+$config['base_url'] = $protocol . "://{$host}/v1/UADashboard";
 
 /*
 |--------------------------------------------------------------------------
