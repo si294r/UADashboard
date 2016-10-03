@@ -3,18 +3,35 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Admin_model extends CI_Model {
-    
-    public function __construct() {
-        parent::__construct();
-        $this->load->database();
-    }    
+
+    var $table = 'admin';
+    var $column = array('username', 'password', 'status');
 
     public function signin($username, $password) {
-        $query = $this->db->query(
-                    "select * from tbl_ua_admin where username = ? and password = ? limit 1", 
-                    array($username, md5($password))
-                );
-        return $query->row_array();
+
+        $this->load->helper('mongodb');
+
+        $db = get_mongodb_auth();
+
+        $document = $db->admin->findOne([
+            'username' => $username,
+            'password' => md5($password),
+            'status' => 'active'
+        ]);
+
+        return bson_document_to_array($document);
     }
 
+    public function change_password($_id, $new_password) {
+
+        $this->load->helper('mongodb');
+
+        $db = get_mongodb_auth();
+
+        $db->admin->updateOne(['_id' => bson_oid($_id)], ['$set' => ['password' => md5($new_password)]]);
+
+        $document = $db->admin->findOne(['_id' => bson_oid($_id)]);
+
+        return bson_document_to_array($document);
+    }
 }

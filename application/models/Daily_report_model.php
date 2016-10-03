@@ -50,7 +50,9 @@ select *
 ,case when lifetime>=30 then 1 else 0 end as retention_D30
 ,case when last_active = trunc(dateadd(day, -2, trunc(sysdate))) then 1 else 0 end as retention_Lastday
 from data_ua
-where dates between '".$this->get_start_date()."'  and '".$this->get_end_date()."'  -- Tanggal  Start and end
+where crystaluse <= 15000 and
+    swrve_invalid_iap = 0 and
+    dates between '".$this->get_start_date()."'  and '".$this->get_end_date()."'  -- Tanggal  Start and end
     and user_country = '".$this->get_country()."'
 ),
 
