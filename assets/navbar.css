@@ -7,6 +7,10 @@ body {
     margin-bottom: 20px;
 }
 
+.navbar-hi-user {
+    font-size: 14px;
+}
+
 .menu-active {
     font-weight: bold;
 }
