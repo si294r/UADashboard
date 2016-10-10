@@ -22,6 +22,9 @@
             .grid-row-green {
                 background-color: #99e699;
             }
+            .grid-cell-yellow {
+                background-color: #ffff66;
+            }
         </style>
 
         <!-- Core -->
@@ -278,11 +281,13 @@
                             text: 'Install',
                             width: 80,
                             dataIndex: 'install',
+                            tdCls: 'grid-cell-yellow',
                             sortable: true
                         }, {
                             text: 'Organic',
                             width: 80,
                             dataIndex: 'organic',
+                            tdCls: 'grid-cell-yellow',
                             sortable: true
                         }, {
                             xtype: 'templatecolumn',
@@ -494,8 +499,12 @@
                         <div class="form-group">
                             <label for="country">Country</label>
                             <select class="form-control" id="country" style="width: 60px">
-                                <option value="US">US</option>
-                                <option value="UK">UK</option>
+                                <option value="ALL">ALL</option>
+                                <?php 
+                                foreach ($arr_country as $value) {
+                                    echo "<option value=\"{$value['user_country']}\">{$value['user_country']}</option>";                                    
+                                }
+                                ?>
                             </select>
                         </div>
                     </form>

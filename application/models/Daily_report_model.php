@@ -13,9 +13,31 @@ class Daily_report_model extends CI_Model {
         $_SESSION['daily_report_country'] = $v;
     }
     
+    public function get_arr_country()
+    {
+        if (!isset($_SESSION['daily_report_arr_country'])) {
+            $this->load->database();
+            $query = $this->db->query("select * from data_ua_country order by user_country");        
+            $_SESSION['daily_report_arr_country'] = $query->result_array();
+        }
+        return $_SESSION['daily_report_arr_country'];
+    }
+    
     public function get_country()
     {
-        return isset($_SESSION['daily_report_country']) ? $_SESSION['daily_report_country'] : 'US';
+        return isset($_SESSION['daily_report_country']) ? $_SESSION['daily_report_country'] : "ALL";
+    }
+    
+    public function get_filter_country($table = "")
+    {
+        $country = $this->get_country();
+        if ($country == "ALL") {
+            $result = "user_country";
+            if ($table != "") $result = $table . "." . $result;
+        } else {
+            $result = "'".$country."'";
+        }
+        return $result;
     }
     
     public function set_start_date($v)
@@ -50,10 +72,8 @@ select *
 ,case when lifetime>=30 then 1 else 0 end as retention_D30
 ,case when last_active = trunc(dateadd(day, -2, trunc(sysdate))) then 1 else 0 end as retention_Lastday
 from data_ua
-where crystaluse <= 15000 and
-    swrve_invalid_iap = 0 and
-    dates between '".$this->get_start_date()."'  and '".$this->get_end_date()."'  -- Tanggal  Start and end
-    and user_country = '".$this->get_country()."'
+where dates between '".$this->get_start_date()."'  and '".$this->get_end_date()."'  -- Tanggal  Start and end
+    and user_country = ".$this->get_filter_country()."
 ),
 
 data_revenue as
@@ -65,6 +85,7 @@ data_revenue as
 ,round(sum(price_iap),2) as raw_revenue
 from data_iap as di
 join data_ua_date as du on di.event_user = du.swrve_user_id
+where swrve_invalid_iap=0 and last_active>='2016-03-10'
 group by event_user)
 
 
@@ -79,9 +100,9 @@ select dates, dates::varchar as referrer_name, dates::varchar as campaign_name, 
 ,round(sum(costs)/count(1),2) as cpi
 ,count(1) as install
 ,(
-    select organic from data_ua_organic 
+    select sum(organic) from data_ua_organic 
     where data_ua_organic.dates = data_ua_date.dates
-        and data_ua_organic.user_country = '".$this->get_country()."'
+        and data_ua_organic.user_country = ".$this->get_filter_country("data_ua_organic")."
     ) as organic
 ,round(sum(revenue)/count(1),2) as arpu
 ,round(sum(raw_revenue)/count(1),2) as raw_arpu

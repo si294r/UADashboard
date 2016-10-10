@@ -11,11 +11,12 @@ class Daily_report extends CI_Controller {
         }
     }
 
-    public function index($country = "US") {
+    public function index($country = "ALL") {
         $this->load->model('daily_report_model', 'grid');
         $this->grid->set_country($country);
         
-        $this->load->view('daily_report_view');        
+        $data['arr_country'] = $this->grid->get_arr_country();
+        $this->load->view('daily_report_view', $data);        
     }
 
     public function get_session_report() {
