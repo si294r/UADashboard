@@ -230,7 +230,7 @@ from data_ua_date
 left join data_revenue on data_ua_date.swrve_user_id = data_revenue.event_user
 
 group by dates, referrer_name,campaign_name
-order by dates, referrer_name, node, campaign_name
+order by dates, node, referrer_name, campaign_name
 ;
 ";
 //        echo $sql; die;

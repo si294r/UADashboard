@@ -61,6 +61,7 @@ class Daily_report extends CI_Controller {
                 }
                 $data = $this->grid->get();
                 $index0 = -1;
+                $arr_index1 = [];
                 $tree = array();
                 foreach ($data as $k => $v) {
                     if ($v['node'] == 0) {
@@ -69,10 +70,12 @@ class Daily_report extends CI_Controller {
                         $tree[$index0] = $v;
                     } elseif ($v['node'] == 1) {
                         $index1++;
+                        $arr_index1[$v['referrer_name']] = $index1;
                         $tree[$index0]['children'][$index1] = $v;
                     } elseif ($v['node'] == 2) {
                         $v['leaf'] = true;
-                        $tree[$index0]['children'][$index1]['children'][] = $v;
+                        $temp_index1 = $arr_index1[$v['referrer_name']];
+                        $tree[$index0]['children'][$temp_index1]['children'][] = $v;
                     }
                 }
                 echo json_encode(
