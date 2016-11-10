@@ -37,7 +37,7 @@ select *
 ,case when lifetime>=1 then 1 else 0 end as retention_D1
 ,case when lifetime>=3 then 1 else 0 end as retention_D3
 ,case when lifetime>=7 then 1 else 0 end as retention_D7
-from data_ua_jellypop
+from data_ua_almighty
 where dates between '".$this->get_start_date()."'  and '".$this->get_end_date()."'  -- Tanggal  Start and end
 )
 
@@ -68,7 +68,7 @@ select referrer_name,referrer_name as campaign_name, 0 as node
 
 from data_ua_date 
 left join tbl_ua_setting on data_ua_date.referrer_name = tbl_ua_setting.channel
-    and tbl_ua_setting.project = 'jellypop'
+    and tbl_ua_setting.project = 'almighty'
 group by referrer_name
 
 UNION ALL
