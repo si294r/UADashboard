@@ -287,7 +287,7 @@
                             text: 'Organic',
                             width: 80,
                             dataIndex: 'organic',
-                            tdCls: 'grid-cell-yellow',
+//                            tdCls: 'grid-cell-yellow',
                             sortable: true
                         }, {
                             xtype: 'templatecolumn',
