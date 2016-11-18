@@ -37,6 +37,7 @@
                                 <ul class="dropdown-menu">
                                     <li><a href="<?php echo base_url('home3') ?>">Dashboard</a></li>
                                     <li><a href="<?php echo base_url('setting3') ?>">Setting</a></li>
+                                    <li><a href="<?php echo base_url('daily_report3') ?>">Daily Report</a></li>
                                 </ul>
                             </li>    
                         </ul>

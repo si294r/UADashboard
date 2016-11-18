@@ -47,7 +47,7 @@ select *
 ,case when lifetime>=1 then 1 else 0 end as retention_D1
 ,case when lifetime>=3 then 1 else 0 end as retention_D3
 ,case when lifetime>=7 then 1 else 0 end as retention_D7
-from data_ua_jellypop
+from data_ua_almighty
 where dates between '".$this->get_start_date()."'  and '".$this->get_end_date()."'  -- Tanggal  Start and end
 and referrer_name='".$this->get_referrer_name()."' and campaign_name='".$this->get_campaign_name()."' -- Filter referrer name dan campaign name
 )
