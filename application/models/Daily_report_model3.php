@@ -103,7 +103,8 @@ select dates, dates::varchar as referrer_name, dates::varchar as campaign_name, 
     --where data_ua_organic_almighty.dates = data_ua_date.dates
     --    and data_ua_organic_almighty.user_country = ".$this->get_filter_country("data_ua_organic_almighty")."
     select count(1) from data_ua_date as data_ua_organic
-    where data_ua_organic.dates = data_ua_date.dates and data_ua_organic.referrer_name = 'Organic'
+    where data_ua_organic.dates = data_ua_date.dates 
+        and (data_ua_organic.referrer_name = 'Organic' or data_ua_organic.campaign_name = '')
     ) as organic
 ,round(sum(revenue)/count(1),2) as arpu
 ,round(sum(raw_revenue)/count(1),2) as raw_arpu
@@ -137,7 +138,7 @@ from data_ua_date
 left join data_revenue on data_ua_date.swrve_user_id = data_revenue.event_user
 left join tbl_ua_setting on data_ua_date.referrer_name = tbl_ua_setting.channel 
     and tbl_ua_setting.project = 'almighty'
-where referrer_name <> 'Organic'
+where referrer_name <> 'Organic' and campaign_name <> ''
 group by dates
 
 UNION ALL
@@ -185,7 +186,7 @@ from data_ua_date
 left join data_revenue on data_ua_date.swrve_user_id = data_revenue.event_user
 left join tbl_ua_setting on data_ua_date.referrer_name = tbl_ua_setting.channel 
     and tbl_ua_setting.project = 'almighty'
-where referrer_name <> 'Organic'    
+where referrer_name <> 'Organic' and campaign_name <> ''   
 group by dates, referrer_name
 
 UNION ALL
@@ -231,7 +232,7 @@ select dates, referrer_name,campaign_name, 2 as node
 
 from data_ua_date 
 left join data_revenue on data_ua_date.swrve_user_id = data_revenue.event_user
-where referrer_name <> 'Organic'
+where referrer_name <> 'Organic' and campaign_name <> ''
 
 group by dates, referrer_name,campaign_name
 order by dates, referrer_name, node, campaign_name
