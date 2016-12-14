@@ -195,15 +195,15 @@ group by data_ua_date.dates, data_ua_date.referrer_name
 
 UNION ALL
 
-select dates, referrer_name,campaign_name, 2 as node
+select data_ua_date.dates, data_ua_date.referrer_name, data_ua_date.campaign_name, 2 as node
 ,round(sum(d1_revenue),2) as d1_revenue
 ,round(sum(d7_revenue),2) as d7_revenue
 ,round(sum(d14_revenue),2) as d14_revenue
 ,round(sum(d30_revenue),2) as d30_revenue
 ,round(sum(raw_revenue),2) as total_raw_revenue
 ,round(sum(revenue),2) as total_revenue
-,round(sum(costs),2) as spend
-,round(sum(costs)/count(1),2) as cpi
+,round(sum(cpi_almighty.costs),2) as spend
+,round(sum(cpi_almighty.costs)/count(1),2) as cpi
 ,count(1) as install
 ,0 as organic
 ,round(sum(revenue)/count(1),2) as arpu
@@ -211,12 +211,12 @@ select dates, referrer_name,campaign_name, 2 as node
 ,round(sum(revenue)/nullif(sum(spending_user),0),2) as arppu
 ,round(sum(raw_revenue)/nullif(sum(spending_user),0),2) as raw_arppu
 ,100*sum(spending_user)/count(1) as ppu
-,round((sum(revenue)-sum(costs)),2) as roi
-,round((sum(raw_revenue)-sum(costs)),2) as raw_roi
-,nvl(100*round((sum(revenue)-sum(costs))/nullif(sum(costs),0),2),0) as roi_percent
-,nvl(100*round((sum(raw_revenue)-sum(costs))/nullif(sum(costs),0),2),0) as raw_roi_percent
-,nvl(100*round(sum(revenue)/nullif(sum(costs),0),2),0) as roas_percent
-,nvl(100*round(sum(raw_revenue)/nullif(sum(costs),0),2),0) as raw_roas_percent
+,round((sum(revenue)-sum(cpi_almighty.costs)),2) as roi
+,round((sum(raw_revenue)-sum(cpi_almighty.costs)),2) as raw_roi
+,nvl(100*round((sum(revenue)-sum(cpi_almighty.costs))/nullif(sum(cpi_almighty.costs),0),2),0) as roi_percent
+,nvl(100*round((sum(raw_revenue)-sum(cpi_almighty.costs))/nullif(sum(cpi_almighty.costs),0),2),0) as raw_roi_percent
+,nvl(100*round(sum(revenue)/nullif(sum(cpi_almighty.costs),0),2),0) as roas_percent
+,nvl(100*round(sum(raw_revenue)/nullif(sum(cpi_almighty.costs),0),2),0) as raw_roas_percent
 ,sum(session)/count(1) as average_session
 ,sum(session_length)/count(1) as average_session_length
 ,sum(lifetime)/count(1) as average_lifetime
@@ -236,9 +236,11 @@ select dates, referrer_name,campaign_name, 2 as node
 
 from data_ua_date 
 left join data_revenue on data_ua_date.swrve_user_id = data_revenue.event_user
-where referrer_name <> 'Organic' and campaign_name <> ''
+left join cpi_almighty on cpi_almighty.dates::date = data_ua_date.dates
+    and cpi_almighty.referrer_name = data_ua_date.referrer_name
+where data_ua_date.referrer_name <> 'Organic' and data_ua_date.campaign_name <> ''
 
-group by dates, referrer_name,campaign_name
+group by data_ua_date.dates, data_ua_date.referrer_name, data_ua_date.campaign_name
 order by dates, referrer_name, node, campaign_name
 ;
 ";
