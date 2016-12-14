@@ -42,17 +42,17 @@ where dates between '".$this->get_start_date()."'  and '".$this->get_end_date().
 )
 
 
-select referrer_name,referrer_name as campaign_name, 0 as node
+select data_ua_date.referrer_name, data_ua_date.referrer_name as campaign_name, 0 as node
 ,round(sum(revenue),2) as total_revenue
- ,round(sum(costs),2) as spend
- ,round(sum(costs)/count(1),2) as cpi
+ ,round(sum(cpi_almighty.costs),2) as spend
+ ,round(sum(cpi_almighty.costs)/count(1),2) as cpi
 ,count(1) as install
  ,round(sum(revenue)/count(1),2) as arpu
  ,round(sum(revenue)/nullif(sum(spending_user),0),2) as arppu
 ,100*sum(spending_user)/count(1) as ppu
-,round((sum(revenue)-sum(costs)),2) as roi
-,nvl(100*round((sum(revenue)-sum(costs))/nullif(sum(costs),0),2),0) as roi_percent
-,nvl(100*round(sum(revenue)/nullif(sum(costs),0),2),0) as roas_percent
+,round((sum(revenue)-sum(cpi_almighty.costs)),2) as roi
+,nvl(100*round((sum(revenue)-sum(cpi_almighty.costs))/nullif(sum(cpi_almighty.costs),0),2),0) as roi_percent
+,nvl(100*round(sum(revenue)/nullif(sum(cpi_almighty.costs),0),2),0) as roas_percent
 ,sum(session)/count(1) as average_session
 ,sum(session_length)/count(1) as average_session_length
 ,sum(lifetime)/count(1) as average_lifetime
@@ -67,23 +67,25 @@ select referrer_name,referrer_name as campaign_name, 0 as node
 ,coalesce(min(d7_limit),-1) as d7_limit
 
 from data_ua_date 
+left join cpi_almighty on cpi_almighty.dates::date = data_ua_date.dates
+    and cpi_almighty.referrer_name = data_ua_date.referrer_name
 left join tbl_ua_setting on data_ua_date.referrer_name = tbl_ua_setting.channel
     and tbl_ua_setting.project = 'almighty'
-group by referrer_name
+group by data_ua_date.referrer_name
 
 UNION ALL
 
-select referrer_name,campaign_name, 1 as node
+select data_ua_date.referrer_name, data_ua_date.campaign_name, 1 as node
 ,round(sum(revenue),2) as total_revenue
- ,round(sum(costs),2) as spend
- ,round(sum(costs)/count(1),2) as cpi
+ ,round(sum(cpi_almighty.costs),2) as spend
+ ,round(sum(cpi_almighty.costs)/count(1),2) as cpi
 ,count(1) as install
  ,round(sum(revenue)/count(1),2) as arpu
  ,round(sum(revenue)/nullif(sum(spending_user),0),2) as arppu
 ,100*sum(spending_user)/count(1) as ppu
-,round(sum(revenue)-sum(costs),2) as roi
-,nvl(100*round((sum(revenue)-sum(costs))/nullif(sum(costs),0),2),0) as roi_percent
-,nvl(100*round(sum(revenue)/nullif(sum(costs),0),2),0) as roas_percent
+,round(sum(revenue)-sum(cpi_almighty.costs),2) as roi
+,nvl(100*round((sum(revenue)-sum(cpi_almighty.costs))/nullif(sum(cpi_almighty.costs),0),2),0) as roi_percent
+,nvl(100*round(sum(revenue)/nullif(sum(cpi_almighty.costs),0),2),0) as roas_percent
 ,sum(session)/count(1) as average_session
 ,sum(session_length)/count(1) as average_session_length
 ,sum(lifetime)/count(1) as average_lifetime
@@ -98,7 +100,9 @@ select referrer_name,campaign_name, 1 as node
 ,-1 as d7_limit
 
 from data_ua_date 
-group by referrer_name,campaign_name
+left join cpi_almighty on cpi_almighty.dates::date = data_ua_date.dates
+    and cpi_almighty.referrer_name = data_ua_date.referrer_name
+group by data_ua_date.referrer_name, data_ua_date.campaign_name
 order by referrer_name, node, campaign_name
 ;
 ";
