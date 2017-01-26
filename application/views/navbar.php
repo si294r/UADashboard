@@ -40,6 +40,15 @@
                                     <li><a href="<?php echo base_url('daily_report3') ?>">Daily Report</a></li>
                                 </ul>
                             </li>    
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle <?php echo in_array($class,['home4','subhome4','setting4']) ? 'menu-active' : '' ?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Almighty 1.5<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="<?php echo base_url('home4') ?>">Dashboard</a></li>
+                                    <li><a href="<?php echo base_url('setting4') ?>">Setting</a></li>
+                                    <li><a href="<?php echo base_url('daily_report4') ?>">Daily Report</a></li>
+                                </ul>
+                            </li>    
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <?php if (isset($_SESSION['signin']['username']) && $_SESSION['signin']['username'] != 'admin') { ?>
