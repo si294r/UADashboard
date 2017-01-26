@@ -46,8 +46,8 @@ class Chart4_model extends CI_Model {
 
         $sql = "
 select dcf.* 
-  ,COALESCE((select event_note from tbl_ua_manage_note where tanggal = dcf.dates and project = 'almighty' limit 1), '') event_note
-from data_chart_series_almighty dcf
+  ,COALESCE((select event_note from tbl_ua_manage_note where tanggal = dcf.dates and project = 'almighty15' limit 1), '') event_note
+from data_chart_series_almighty15 dcf
 where dates>= '".$this->get_start_date()."' -- Tanggal Start
 and dates<='".$this->get_end_date()."' -- Tanggal end
 and series IN ('$sql_where')

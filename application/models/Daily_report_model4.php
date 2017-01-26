@@ -17,7 +17,7 @@ class Daily_report_model4 extends CI_Model {
     {
         if (!isset($_SESSION['daily_report_arr_country4'])) {
             $this->load->database();
-            $query = $this->db->query("select * from data_ua_country_almighty order by user_country");        
+            $query = $this->db->query("select * from data_ua_country_almighty15 order by user_country");        
             $_SESSION['daily_report_arr_country4'] = $query->result_array();
         }
         return $_SESSION['daily_report_arr_country4'];
@@ -71,7 +71,7 @@ select *
 ,case when lifetime>=7 then 1 else 0 end as retention_D7
 ,case when lifetime>=30 then 1 else 0 end as retention_D30
 ,case when last_active = trunc(dateadd(day, -2, trunc(sysdate))) then 1 else 0 end as retention_Lastday
-from data_ua_almighty
+from data_ua_almighty15
 where dates between '".$this->get_start_date()."'  and '".$this->get_end_date()."'  -- Tanggal  Start and end
     and user_country = ".$this->get_filter_country()." -- Breakdown country pakai country dari data_ua_date
 ),
@@ -83,7 +83,7 @@ data_revenue as
 ,round(sum(case when datediff(days,du.dates, di.event_date) <= 14 then price_iap else 0 end),2) as d14_revenue
 ,round(sum(case when datediff(days,du.dates, di.event_date) <= 30 then price_iap else 0 end),2) as d30_revenue
 ,round(sum(price_iap),2) as raw_revenue
-from data_iap_appsflyer_almighty as di
+from data_iap_appsflyer_almighty15 as di
 join data_ua_date as du on di.event_user = du.swrve_user_id
 group by event_user)
 
@@ -95,13 +95,13 @@ select data_ua_date.dates, data_ua_date.dates::varchar as referrer_name, data_ua
 ,round(sum(d30_revenue),2) as d30_revenue
 ,round(sum(raw_revenue),2) as total_raw_revenue
 ,round(sum(revenue),2) as total_revenue
-,round(sum(cpi_almighty.costs),2) as spend
-,round(sum(cpi_almighty.costs)/count(1),2) as cpi
+,round(sum(cpi_almighty15.costs),2) as spend
+,round(sum(cpi_almighty15.costs)/count(1),2) as cpi
 ,count(1) as install
 ,(
-    --select sum(organic) from data_ua_organic_almighty 
-    --where data_ua_organic_almighty.dates = data_ua_date.dates
-    --    and data_ua_organic_almighty.user_country = ".$this->get_filter_country("data_ua_organic_almighty")."
+    --select sum(organic) from data_ua_organic_almighty15 
+    --where data_ua_organic_almighty15.dates = data_ua_date.dates
+    --    and data_ua_organic_almighty15.user_country = ".$this->get_filter_country("data_ua_organic_almighty15")."
     select count(1) from data_ua_date as data_ua_organic
     where data_ua_organic.dates = data_ua_date.dates 
         and (data_ua_organic.referrer_name = 'Organic' or data_ua_organic.campaign_name = '')
@@ -111,12 +111,12 @@ select data_ua_date.dates, data_ua_date.dates::varchar as referrer_name, data_ua
 ,round(sum(revenue)/nullif(sum(spending_user),0),2) as arppu
 ,round(sum(raw_revenue)/nullif(sum(spending_user),0),2) as raw_arppu
 ,100*sum(spending_user)/count(1) as ppu
-,round((sum(revenue)-sum(cpi_almighty.costs)),2) as roi
-,round((sum(raw_revenue)-sum(cpi_almighty.costs)),2) as raw_roi
-,nvl(100*round((sum(revenue)-sum(cpi_almighty.costs))/nullif(sum(cpi_almighty.costs),0),2),0) as roi_percent
-,nvl(100*round((sum(raw_revenue)-sum(cpi_almighty.costs))/nullif(sum(cpi_almighty.costs),0),2),0) as raw_roi_percent
-,nvl(100*round(sum(revenue)/nullif(sum(cpi_almighty.costs),0),2),0) as roas_percent
-,nvl(100*round(sum(raw_revenue)/nullif(sum(cpi_almighty.costs),0),2),0) as raw_roas_percent
+,round((sum(revenue)-sum(cpi_almighty15.costs)),2) as roi
+,round((sum(raw_revenue)-sum(cpi_almighty15.costs)),2) as raw_roi
+,nvl(100*round((sum(revenue)-sum(cpi_almighty15.costs))/nullif(sum(cpi_almighty15.costs),0),2),0) as roi_percent
+,nvl(100*round((sum(raw_revenue)-sum(cpi_almighty15.costs))/nullif(sum(cpi_almighty15.costs),0),2),0) as raw_roi_percent
+,nvl(100*round(sum(revenue)/nullif(sum(cpi_almighty15.costs),0),2),0) as roas_percent
+,nvl(100*round(sum(raw_revenue)/nullif(sum(cpi_almighty15.costs),0),2),0) as raw_roas_percent
 ,sum(session)/count(1) as average_session
 ,sum(session_length)/count(1) as average_session_length
 ,sum(lifetime)/count(1) as average_lifetime
@@ -137,9 +137,9 @@ select data_ua_date.dates, data_ua_date.dates::varchar as referrer_name, data_ua
 from data_ua_date 
 left join data_revenue on data_ua_date.swrve_user_id = data_revenue.event_user
 left join tbl_ua_setting on data_ua_date.referrer_name = tbl_ua_setting.channel 
-    and tbl_ua_setting.project = 'almighty'
-left join cpi_almighty on cpi_almighty.dates::date = data_ua_date.dates
-    and cpi_almighty.referrer_name = data_ua_date.referrer_name
+    and tbl_ua_setting.project = 'almighty15'
+left join cpi_almighty15 on cpi_almighty15.dates::date = data_ua_date.dates
+    and cpi_almighty15.referrer_name = data_ua_date.referrer_name
 where data_ua_date.referrer_name <> 'Organic' and data_ua_date.campaign_name <> ''
 group by data_ua_date.dates
 
@@ -152,8 +152,8 @@ select data_ua_date.dates, data_ua_date.referrer_name, data_ua_date.referrer_nam
 ,round(sum(d30_revenue),2) as d30_revenue
 ,round(sum(raw_revenue),2) as total_raw_revenue
 ,round(sum(revenue),2) as total_revenue
-,round(sum(cpi_almighty.costs),2) as spend
-,round(sum(cpi_almighty.costs)/count(1),2) as cpi
+,round(sum(cpi_almighty15.costs),2) as spend
+,round(sum(cpi_almighty15.costs)/count(1),2) as cpi
 ,count(1) as install
 ,0 as organic
 ,round(sum(revenue)/count(1),2) as arpu
@@ -161,12 +161,12 @@ select data_ua_date.dates, data_ua_date.referrer_name, data_ua_date.referrer_nam
 ,round(sum(revenue)/nullif(sum(spending_user),0),2) as arppu
 ,round(sum(raw_revenue)/nullif(sum(spending_user),0),2) as raw_arppu
 ,100*sum(spending_user)/count(1) as ppu
-,round((sum(revenue)-sum(cpi_almighty.costs)),2) as roi
-,round((sum(raw_revenue)-sum(cpi_almighty.costs)),2) as raw_roi
-,nvl(100*round((sum(revenue)-sum(cpi_almighty.costs))/nullif(sum(cpi_almighty.costs),0),2),0) as roi_percent
-,nvl(100*round((sum(raw_revenue)-sum(cpi_almighty.costs))/nullif(sum(cpi_almighty.costs),0),2),0) as raw_roi_percent
-,nvl(100*round(sum(revenue)/nullif(sum(cpi_almighty.costs),0),2),0) as roas_percent
-,nvl(100*round(sum(raw_revenue)/nullif(sum(cpi_almighty.costs),0),2),0) as raw_roas_percent
+,round((sum(revenue)-sum(cpi_almighty15.costs)),2) as roi
+,round((sum(raw_revenue)-sum(cpi_almighty15.costs)),2) as raw_roi
+,nvl(100*round((sum(revenue)-sum(cpi_almighty15.costs))/nullif(sum(cpi_almighty15.costs),0),2),0) as roi_percent
+,nvl(100*round((sum(raw_revenue)-sum(cpi_almighty15.costs))/nullif(sum(cpi_almighty15.costs),0),2),0) as raw_roi_percent
+,nvl(100*round(sum(revenue)/nullif(sum(cpi_almighty15.costs),0),2),0) as roas_percent
+,nvl(100*round(sum(raw_revenue)/nullif(sum(cpi_almighty15.costs),0),2),0) as raw_roas_percent
 ,sum(session)/count(1) as average_session
 ,sum(session_length)/count(1) as average_session_length
 ,sum(lifetime)/count(1) as average_lifetime
@@ -187,9 +187,9 @@ select data_ua_date.dates, data_ua_date.referrer_name, data_ua_date.referrer_nam
 from data_ua_date 
 left join data_revenue on data_ua_date.swrve_user_id = data_revenue.event_user
 left join tbl_ua_setting on data_ua_date.referrer_name = tbl_ua_setting.channel 
-    and tbl_ua_setting.project = 'almighty'
-left join cpi_almighty on cpi_almighty.dates::date = data_ua_date.dates
-    and cpi_almighty.referrer_name = data_ua_date.referrer_name
+    and tbl_ua_setting.project = 'almighty15'
+left join cpi_almighty15 on cpi_almighty15.dates::date = data_ua_date.dates
+    and cpi_almighty15.referrer_name = data_ua_date.referrer_name
 where data_ua_date.referrer_name <> 'Organic' and data_ua_date.campaign_name <> ''   
 group by data_ua_date.dates, data_ua_date.referrer_name
 
@@ -202,8 +202,8 @@ select data_ua_date.dates, data_ua_date.referrer_name, data_ua_date.campaign_nam
 ,round(sum(d30_revenue),2) as d30_revenue
 ,round(sum(raw_revenue),2) as total_raw_revenue
 ,round(sum(revenue),2) as total_revenue
-,round(sum(cpi_almighty.costs),2) as spend
-,round(sum(cpi_almighty.costs)/count(1),2) as cpi
+,round(sum(cpi_almighty15.costs),2) as spend
+,round(sum(cpi_almighty15.costs)/count(1),2) as cpi
 ,count(1) as install
 ,0 as organic
 ,round(sum(revenue)/count(1),2) as arpu
@@ -211,12 +211,12 @@ select data_ua_date.dates, data_ua_date.referrer_name, data_ua_date.campaign_nam
 ,round(sum(revenue)/nullif(sum(spending_user),0),2) as arppu
 ,round(sum(raw_revenue)/nullif(sum(spending_user),0),2) as raw_arppu
 ,100*sum(spending_user)/count(1) as ppu
-,round((sum(revenue)-sum(cpi_almighty.costs)),2) as roi
-,round((sum(raw_revenue)-sum(cpi_almighty.costs)),2) as raw_roi
-,nvl(100*round((sum(revenue)-sum(cpi_almighty.costs))/nullif(sum(cpi_almighty.costs),0),2),0) as roi_percent
-,nvl(100*round((sum(raw_revenue)-sum(cpi_almighty.costs))/nullif(sum(cpi_almighty.costs),0),2),0) as raw_roi_percent
-,nvl(100*round(sum(revenue)/nullif(sum(cpi_almighty.costs),0),2),0) as roas_percent
-,nvl(100*round(sum(raw_revenue)/nullif(sum(cpi_almighty.costs),0),2),0) as raw_roas_percent
+,round((sum(revenue)-sum(cpi_almighty15.costs)),2) as roi
+,round((sum(raw_revenue)-sum(cpi_almighty15.costs)),2) as raw_roi
+,nvl(100*round((sum(revenue)-sum(cpi_almighty15.costs))/nullif(sum(cpi_almighty15.costs),0),2),0) as roi_percent
+,nvl(100*round((sum(raw_revenue)-sum(cpi_almighty15.costs))/nullif(sum(cpi_almighty15.costs),0),2),0) as raw_roi_percent
+,nvl(100*round(sum(revenue)/nullif(sum(cpi_almighty15.costs),0),2),0) as roas_percent
+,nvl(100*round(sum(raw_revenue)/nullif(sum(cpi_almighty15.costs),0),2),0) as raw_roas_percent
 ,sum(session)/count(1) as average_session
 ,sum(session_length)/count(1) as average_session_length
 ,sum(lifetime)/count(1) as average_lifetime
@@ -236,8 +236,8 @@ select data_ua_date.dates, data_ua_date.referrer_name, data_ua_date.campaign_nam
 
 from data_ua_date 
 left join data_revenue on data_ua_date.swrve_user_id = data_revenue.event_user
-left join cpi_almighty on cpi_almighty.dates::date = data_ua_date.dates
-    and cpi_almighty.referrer_name = data_ua_date.referrer_name
+left join cpi_almighty15 on cpi_almighty15.dates::date = data_ua_date.dates
+    and cpi_almighty15.referrer_name = data_ua_date.referrer_name
 where data_ua_date.referrer_name <> 'Organic' and data_ua_date.campaign_name <> ''
 
 group by data_ua_date.dates, data_ua_date.referrer_name, data_ua_date.campaign_name
